@@ -9,18 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
 {
     Schema::create('notifications', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('user_id')->constrained('users')->cascadeOnDelete(); // receiver
-        $table->string('type')->nullable();   // e.g. application.created, application.decided, rating.received
+        $table->unsignedBigInteger('user_id'); // could be client, worker, or admin
+        $table->string('type'); // e.g. job_update, application_status
         $table->text('message');
         $table->boolean('is_read')->default(false);
         $table->timestamps();
     });
 }
-
 
     /**
      * Reverse the migrations.

@@ -9,16 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
 {
     Schema::create('applications', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('job_id')->constrained()->cascadeOnDelete();
-        $table->foreignId('worker_id')->constrained('users')->cascadeOnDelete();
-        $table->enum('status',['pending','accepted','rejected'])->default('pending');
-        $table->text('cover_note')->nullable();
+        $table->unsignedBigInteger('job_id');
+        $table->unsignedBigInteger('worker_id');
+        $table->text('cover_letter')->nullable();
+        $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
         $table->timestamps();
-        $table->unique(['job_id','worker_id']); // one application per worker per job
+
+        $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
+        $table->foreign('worker_id')->references('id')->on('workers')->onDelete('cascade');
     });
 }
 
